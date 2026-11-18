@@ -23,6 +23,9 @@ export class App {
   async start(): Promise<void> {
     this.main = renderShell(this.root);
     this.main.append(h('p', { class: 'loading' }, '載入中…'));
+    // 與劇本列表同時預先載入本週時間表（Apps Script 每次請求約 1–3 秒，平行可省一半等待）
+    const guessToday = dayNum(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei' }).format(new Date()));
+    this.weekBlocks(mondayOf(guessToday)).catch(() => {});
     try {
       const r = await api.scripts();
       this.scripts = r.scripts;
