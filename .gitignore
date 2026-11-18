@@ -1,7 +1,6 @@
 node_modules/
 dist/
-.env
-.env.*
-!.env.example
+.env.local
+.env.*.local
 # clasp 的登入憑證只存在使用者家目錄，不應出現在 repo；以防萬一
 .clasprc.json
