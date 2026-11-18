@@ -67,6 +67,11 @@ export class App {
   /** 取得日期範圍內的區塊（含快取） */
   blocks(fromDay: number, toDay: number): Promise<Block[]> {
     const key = `${fromDay}:${toDay}`;
+    // 已載入的範圍若涵蓋所需日期就直接沿用（多出來的區塊不影響衝突判斷）
+    for (const [k, cached] of this.cache) {
+      const [f, t] = k.split(':').map(Number);
+      if (f <= fromDay && t >= toDay) return cached;
+    }
     let p = this.cache.get(key);
     if (!p) {
       p = api.schedule(dayStr(fromDay), dayStr(toDay)).then((r) => {
