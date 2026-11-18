@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const envFile = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'frontend', '.env.production');
+const envFile = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'frontend', '.env');
 const API = /VITE_API_URL=(\S+)/.exec(fs.readFileSync(envFile, 'utf8'))[1];
 
 const get = async (params) => (await fetch(`${API}?${new URLSearchParams(params)}`)).json();
