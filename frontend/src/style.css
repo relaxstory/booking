@@ -1,0 +1,32 @@
+:root {
+  --bg: #faf9f7;
+  --fg: #222;
+  --muted: #777;
+  font-family: system-ui, 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18181a;
+    --fg: #eee;
+    --muted: #999;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.status {
+  color: var(--muted);
+  font-size: 0.875rem;
+}

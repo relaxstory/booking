@@ -1,0 +1,12 @@
+{
+  "name": "relax-story-lab-schedule-backend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "push": "clasp push",
+    "open": "clasp open-script"
+  },
+  "devDependencies": {
+    "@google/clasp": "^3.4.1"
+  }
+}
