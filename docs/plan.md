@@ -32,7 +32,12 @@ relax-story-lab-schedule/
 
 ## 3. 階段
 
-### 階段 0：環境建置
+### 階段 0：環境建置 ✅（2026-11-18 完成）
+
+- Google Sheet：https://drive.google.com/open?id=1YApuRxavmAeYQuqVdBzMhsZwEjTBzAMJg1BuVnwKuQk
+- Apps Script：https://script.google.com/d/1Ja6cF19jMy0IdD_gIAvHGdtQrd-zAhBA1W8PQjdBnHgecNMYSVpAqBJ4/edit
+- 網頁應用程式部署 ID：`AKfycbyy32l2fuZzhnNkTf6Fn8Xz0shdCUTGDxpIsEinp0Q2gsn9zvRJS9Vsm1H3F_mcwIdpNw`（更新後端時沿用此部署，網址不變）
+
 - `git init`、設定 repo 層級的 user.name／email（GitHub noreply 信箱）。
 - 在 GitHub 建立公開 repo `relaxstory/relaxstory.github.io`，設定 Pages 由 Actions 部署。
 - 建立 Google Sheet 與綁定的 Apps Script 專案，clasp 連結到 `backend/`。
