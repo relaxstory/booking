@@ -15,6 +15,9 @@
 const SPREADSHEET_ID = '1YApuRxavmAeYQuqVdBzMhsZwEjTBzAMJg1BuVnwKuQk';
 const TZ = 'Asia/Taipei';
 
+/** 後台 Google 登入的 OAuth 用戶端 ID（公開值，非密鑰；需與 frontend/.env 的 VITE_GOOGLE_CLIENT_ID 相同） */
+const GOOGLE_CLIENT_ID = '298103485927-4647bjf0l5qn3e7m8bucf77davqq3f0r.apps.googleusercontent.com';
+
 /** 各工作表欄位（第一列為標題，依標題名稱讀寫，欄位順序可調整） */
 const SHEETS = {
   scripts: ['id', 'name', 'players', 'duration_min', 'male', 'female', 'price', 'active'],
@@ -38,6 +41,12 @@ const RULES = {
 
 /** 佔用時段的場次狀態 */
 const OCCUPYING_STATUSES = ['pending', 'confirmed', 'recruiting'];
+
+/** 進行中（尚未拒絕或取消）的場次狀態 */
+const ACTIVE_STATUSES = ['pending', 'confirmed', 'group_pending', 'recruiting'];
+
+/** 後台登入有效時間（秒；CacheService 上限 6 小時） */
+const ADMIN_SESSION_SEC = 21600;
 
 /** 場次狀態 → 前台顯示用狀態 */
 const PUBLIC_STATUS = { pending: 'pending', confirmed: 'booked', recruiting: 'recruiting' };

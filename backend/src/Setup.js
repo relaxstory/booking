@@ -39,6 +39,14 @@ function setup() {
   Logger.log('setup 完成');
 }
 
+/**
+ * 新增權限後於編輯器執行一次，完成授權（後台登入需要「連線至外部服務」以向 Google 驗證登入）。
+ */
+function authorize() {
+  UrlFetchApp.fetch('https://oauth2.googleapis.com/tokeninfo', { muteHttpExceptions: true });
+  Logger.log('授權完成');
+}
+
 /** 刪除測試資料：主揪姓名以「TEST-」開頭的場次及其所有參與者 */
 function purgeTestData() {
   withLock_(function () {

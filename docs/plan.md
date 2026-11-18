@@ -73,7 +73,14 @@ relax-story-lab-schedule/
 
 **完成標準**：玩家可在手機上完成瀏覽、登記、申請加入。
 
-### 階段 3：後台
+### 階段 3：後台（開發完成，待設定 OAuth 用戶端 ID 後部署）
+
+- 網址：`https://relaxstory.github.io/admin.html`（獨立頁面，前台不含後台程式碼）
+- 登入：Google Identity Services 取得 ID token → 後端以 tokeninfo 驗證（aud、iss、email_verified、exp）並比對 admins → 發給 6 小時有效的後台憑證（CacheService）
+- 本機測試：`cd backend; npm test`（新增後台 11 項，共 29 項）
+- 本機預覽：`npm run dev` 後開 `/admin.html?mock`——瀏覽器內直接執行 `backend/src` 的後端程式碼與模擬試算表，按「模擬登入」即可操作（重新整理會重設資料）
+- 部署前：用戶端 ID 填入 `backend/src/Config.js` 的 `GOOGLE_CLIENT_ID` 與 `frontend/.env` 的 `VITE_GOOGLE_CLIENT_ID`；`clasp push` 後於編輯器執行一次 `authorize`（新增「連線至外部服務」權限）
+
 - Google 登入、admins 名單驗證。
 - 時間表檢視（週／月）。
 - 待確認清單（含拼團待確認的衝突標示）：確認／拒絕。

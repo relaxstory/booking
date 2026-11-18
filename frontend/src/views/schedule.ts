@@ -131,7 +131,7 @@ function renderGrid(app: App, days: number[], blocks: Block[]): HTMLElement {
   );
 }
 
-function renderBlock(app: App, seg: Segment): HTMLElement {
+function renderBlock(app: App, seg: Segment<Block>): HTMLElement {
   const b = seg.block;
   const style = `--top:${seg.start};--len:${seg.end - seg.start}`;
   const time = rangeLabel(seg.startAbs, seg.endAbs);

@@ -122,7 +122,7 @@ export function honeypot(): HTMLElement {
 }
 
 /** 讀取並檢查聯絡資料與人數（與後端規則一致）；有錯回傳 null 並標示 */
-export function readContact(form: HTMLElement): Contact | null {
+export function readContact(form: HTMLElement, opts: { consent?: boolean } = {}): Contact | null {
   const c: Contact = {
     name: val(form, 'name'),
     nickname: val(form, 'nickname'),
@@ -146,7 +146,7 @@ export function readContact(form: HTMLElement): Contact | null {
   if (!/^[0-9+\-() ]{8,20}$/.test(c.phone)) errors.push(['phone', c.phone ? '電話格式錯誤' : '請填寫電話']);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email)) errors.push(['email', c.email ? 'Email 格式錯誤' : '請填寫 Email']);
   if (!c.line_id && !c.ig) errors.push(['line_id', 'LINE ID 與 IG 帳號請至少填寫一項']);
-  if (!form.querySelector<HTMLInputElement>('[name="consent"]')?.checked) errors.push(['consent', '請勾選同意隱私權聲明']);
+  if (opts.consent !== false && !form.querySelector<HTMLInputElement>('[name="consent"]')?.checked) errors.push(['consent', '請勾選同意隱私權聲明']);
   // 由下往上標示，最後聚焦在第一個錯誤
   for (const [f, m] of errors.reverse()) showError(form, m, f);
   return errors.length ? null : c;

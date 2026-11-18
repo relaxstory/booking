@@ -75,7 +75,7 @@ export class ApiError extends Error {
   }
 }
 
-async function parse<T>(res: Promise<Response>): Promise<T> {
+export async function parse<T>(res: Promise<Response>): Promise<T> {
   let data: { ok: boolean; error?: string; message?: string; field?: string };
   try {
     const r = await res;

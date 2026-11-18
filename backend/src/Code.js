@@ -4,6 +4,7 @@
  * GET  ?action=ping | scripts | schedule&from=yyyy-MM-dd&to=yyyy-MM-dd
  * POST （Content-Type: text/plain，內容為 JSON，避免 CORS preflight）
  *      { action: 'book', ... } | { action: 'join', ... }
+ *      { action: 'admin_*', token, ... } 後台操作（見 Admin.js）
  */
 
 function doGet(e) {
@@ -39,6 +40,7 @@ function routeGet_(p) {
 }
 
 function routePost_(b) {
+  if (String(b.action).indexOf('admin_') === 0) return routeAdmin_(b);
   switch (b.action) {
     case 'book':
       return handleBook_(b);
