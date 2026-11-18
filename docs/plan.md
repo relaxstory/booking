@@ -45,7 +45,12 @@ relax-story-lab-schedule/
 
 **完成標準**：push 後網站自動更新；`clasp push` 可更新後端。
 
-### 階段 1：後端核心
+### 階段 1：後端核心 ✅（2026-11-18 完成）
+
+- 本機測試：`cd backend; npm test`（以記憶體模擬 Apps Script，18 項）
+- 正式環境冒煙測試：`npm run smoke`（寫入 TEST- 資料，之後於編輯器執行 `purgeTestData`）
+- 更新後端：`npx clasp push --force`，再 `npx clasp update-deployment <部署 ID>`（網址不變）
+
 - 初始化工作表與欄位（一次性 setup 函式）。
 - 公開 API：取得上架劇本、取得某期間時間表（僅公開欄位）。
 - 包場／拼團登記：欄位與男女人數檢查、日期範圍（明天～本月+6 個月月底）、開場時間 09:00–19:00 半點、衝突檢查（LockService）、通關碼驗證（一次性、7 天）。

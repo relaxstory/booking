@@ -1,22 +1,65 @@
 /**
  * Re:LAX Story Lab schedule — Apps Script 後端進入點。
- * 前端以 GET（讀取）與 POST（Content-Type: text/plain，避免 CORS preflight）呼叫。
+ *
+ * GET  ?action=ping | scripts | schedule&from=yyyy-MM-dd&to=yyyy-MM-dd
+ * POST （Content-Type: text/plain，內容為 JSON，避免 CORS preflight）
+ *      { action: 'book', ... } | { action: 'join', ... }
  */
 
 function doGet(e) {
-  const action = (e && e.parameter && e.parameter.action) || '';
-  switch (action) {
-    case 'ping':
-      return json_({ ok: true, time: Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy-MM-dd HH:mm:ss') });
-    default:
-      return json_({ ok: false, error: 'unknown_action' });
-  }
+  return respond_(function () {
+    return routeGet_((e && e.parameter) || {});
+  });
 }
 
 function doPost(e) {
-  return json_({ ok: false, error: 'not_implemented' });
+  return respond_(function () {
+    let body;
+    try {
+      body = JSON.parse((e && e.postData && e.postData.contents) || '');
+    } catch (err) {
+      fail_('bad_request', '請求格式錯誤');
+    }
+    if (!body || typeof body !== 'object') fail_('bad_request', '請求格式錯誤');
+    return routePost_(body);
+  });
 }
 
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+function routeGet_(p) {
+  switch (p.action) {
+    case 'ping':
+      return { ok: true, time: nowStr_() };
+    case 'scripts':
+      return handleScripts_();
+    case 'schedule':
+      return handleSchedule_(p);
+    default:
+      return fail_('unknown_action', '未知的操作');
+  }
+}
+
+function routePost_(b) {
+  switch (b.action) {
+    case 'book':
+      return handleBook_(b);
+    case 'join':
+      return handleJoin_(b);
+    default:
+      return fail_('unknown_action', '未知的操作');
+  }
+}
+
+function respond_(fn) {
+  let out;
+  try {
+    out = fn();
+  } catch (err) {
+    if (err instanceof AppError) {
+      out = Object.assign({ ok: false, error: err.code, message: err.message }, err.extra);
+    } else {
+      console.error((err && err.stack) || err);
+      out = { ok: false, error: 'server_error', message: '系統錯誤，請稍後再試' };
+    }
+  }
+  return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
 }

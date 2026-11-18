@@ -31,9 +31,14 @@ npm run build    # 建置到 frontend/dist
 ```bash
 cd backend
 npm install
+npm test         # 本機測試（不需網路）
 npx clasp login  # 第一次使用時，以 Google 帳號授權
-npx clasp push   # 上傳 backend/src 到 Apps Script
+npx clasp push --force                               # 上傳 backend/src 到 Apps Script
+npx clasp update-deployment <部署 ID>                # 更新正式網址指向的版本（ID 見 docs/plan.md）
+npm run smoke    # 對正式後端做冒煙測試（之後於編輯器執行 purgeTestData）
 ```
+
+編輯器可手動執行的函式：`setup`（建立／補齊工作表）、`createPasscode`（產生通關碼）、`purgeTestData`（刪除 TEST- 測試資料）。
 
 ## 部署
 
