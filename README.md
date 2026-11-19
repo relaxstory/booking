@@ -2,7 +2,13 @@
 
 Re:LAX Story Lab 劇本殺場次預約網站。
 
-- 網站：https://relaxstory.github.io/
+- 網站：https://relaxstory.github.io/booking/（後台：https://relaxstory.github.io/booking/admin.html）
+- 官網：https://relaxstory.github.io/（另一個 repo：`relaxstory/relaxstory.github.io`）
+
+> **2026-11-19 網址搬遷**：本 repo 由 `relaxstory/relaxstory.github.io` 改名為 `relaxstory/booking`，
+> 網站從根網址搬到 `/booking/` 子路徑（`frontend/vite.config.ts` 的 `base` 為 `'/booking/'`，請勿改回 `'/'`）。
+> 本機 clone 請更新 remote：`git remote set-url origin https://github.com/relaxstory/booking.git`。
+> Apps Script 後端、Google Sheet、Google 登入（OAuth 只比對網域 `https://relaxstory.github.io`，與路徑無關）皆不受影響。
 - 規格：[docs/spec.md](docs/spec.md)
 - 開發計畫：[docs/plan.md](docs/plan.md)
 

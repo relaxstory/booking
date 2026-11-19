@@ -75,7 +75,7 @@ relax-story-lab-schedule/
 
 ### 階段 3：後台（開發完成，待設定 OAuth 用戶端 ID 後部署）
 
-- 網址：`https://relaxstory.github.io/admin.html`（獨立頁面，前台不含後台程式碼）
+- 網址：`https://relaxstory.github.io/booking/admin.html`（獨立頁面，前台不含後台程式碼）
 - 登入：Google Identity Services 取得 ID token → 後端以 tokeninfo 驗證（aud、iss、email_verified、exp）並比對 admins → 發給 6 小時有效的後台憑證（CacheService）
 - 本機測試：`cd backend; npm test`（新增後台 11 項，共 29 項）
 - 本機預覽：`npm run dev` 後開 `/admin.html?mock`——瀏覽器內直接執行 `backend/src` 的後端程式碼與模擬試算表，按「模擬登入」即可操作（重新整理會重設資料）
@@ -116,6 +116,7 @@ relax-story-lab-schedule/
 
 ## 5. 網址
 
-- GitHub repo：`relaxstory/relaxstory.github.io`
-- 網站網址：`https://relaxstory.github.io/`（根網址，Vite `base` 設為 `/`）
+- GitHub repo：`relaxstory/booking`（2026-11-19 由 `relaxstory/relaxstory.github.io` 改名）
+- 網站網址：`https://relaxstory.github.io/booking/`（Vite `base` 設為 `/booking/`）
+- 根網址 `https://relaxstory.github.io/` 為官網（repo `relaxstory/relaxstory.github.io`），兩者同網域，Google 登入的「已授權的 JavaScript 來源」不需變更。
 - 本機資料夾仍為 meta repo 下的 `relax-story-lab-schedule/`（資料夾名稱與 repo 名稱不同不影響運作）。
