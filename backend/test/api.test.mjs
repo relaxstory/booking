@@ -33,10 +33,10 @@ function setSessionStatus(id, status) {
 
 beforeEach(() => {
   gas = createGas(NOW);
-  gas.run('setup()');
+  gas.setup();
 });
 
-test('setup 建立工作表、管理者與範例劇本', () => {
+test('setup 建立工作表與管理者（不建立劇本）', () => {
   const names = gas.ss.getSheets().map((s) => s.getName());
   assert.deepEqual(names.sort(), ['admins', 'closures', 'participants', 'passcodes', 'scripts', 'sessions']);
   assert.equal(gas.rows('admins')[0].email, 'owner@example.com');

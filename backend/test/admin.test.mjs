@@ -28,7 +28,7 @@ const events = () => JSON.parse(gas.run('JSON.stringify(__events)')).filter((x) 
 
 beforeEach(() => {
   gas = createGas(NOW);
-  gas.run('setup()');
+  gas.setup();
   gas.run(`globalThis.__events = []; notify_ = function (e, d) { __events.push({ e: e, n: d.participants.length, p: d.participant ? d.participant.nickname : null }); }`);
   const r = gas.post({ action: 'admin_login', id_token: 'mock:owner@example.com' });
   assert.equal(r.ok, true, JSON.stringify(r));

@@ -35,15 +35,7 @@ function setup() {
     if (me) insert_('admins', { email: me, name: '店主', active: 'TRUE' });
   }
 
-  if (readAll_('scripts').length === 0) {
-    [
-      { id: 's-sample-1', name: '範例劇本・六人本', players: 6, duration_min: 240, male: 3, female: 3, price: 600, active: 'TRUE' },
-      { id: 's-sample-2', name: '範例劇本・四人本', players: 4, duration_min: 180, male: 2, female: 2, price: 500, active: 'TRUE' },
-      { id: 's-sample-3', name: '範例劇本・七人本（下架）', players: 7, duration_min: 300, male: 4, female: 3, price: 700, active: 'FALSE' },
-    ].forEach(function (s) { insert_('scripts', s); });
-  }
-
-  Logger.log('setup 完成');
+  Logger.log('setup 完成（劇本請執行 importOfficialScripts 匯入）');
 }
 
 /**
@@ -62,7 +54,7 @@ function authorize() {
 function sendTestEmails() {
   requireAllScopes_();
   const me = Session.getEffectiveUser().getEmail();
-  const script = { id: 's-demo', name: '範例劇本・六人本', players: 6, duration_min: 240 };
+  const script = { id: 's-demo', name: '測試劇本', players: 6, duration_min: 240 };
   const host = { name: '測試主揪', nickname: '主揪', email: me, is_host: 'TRUE', status: 'joined', count: 2, male: 1, female: 1 };
   const guest = { name: '測試玩家', nickname: '玩家', email: me, is_host: 'FALSE', status: 'joined', count: 2, male: 1, female: 1 };
   const day = dayNum_(todayStr_()) + 1;
@@ -111,7 +103,6 @@ const OFFICIAL_SCRIPTS_ = [
  * 匯入正式劇本（可重複執行）：
  *   - 已存在的劇本（同 id）更新名稱、人數、時長、男女人數，保留價格與上下架狀態
  *   - 不存在的新增為上架
- *   - 範例劇本（s-sample-*）沒有場次使用時刪除；仍有場次時改為下架
  */
 function importOfficialScripts() {
   withLock_(function () {
@@ -124,22 +115,26 @@ function importOfficialScripts() {
         insert_('scripts', Object.assign({ price: '', active: 'TRUE' }, s));
       }
     });
+    Logger.log('已匯入 ' + OFFICIAL_SCRIPTS_.length + ' 個正式劇本');
+  });
+}
 
-    const used = {};
-    readAll_('sessions').forEach(function (x) { used[x.script_id] = true; });
-    const samples = readAll_('scripts').filter(function (r) { return r.id.indexOf('s-sample-') === 0; });
-    const remove = [];
-    samples.forEach(function (r) {
-      if (used[r.id]) {
-        r.active = 'FALSE';
-        update_('scripts', r);
-      } else {
-        remove.push(r._row);
-      }
-    });
-    deleteRows_('scripts', remove);
-    Logger.log('已匯入 ' + OFFICIAL_SCRIPTS_.length + ' 個正式劇本；刪除 ' + remove.length + ' 個範例劇本'
-      + (samples.length > remove.length ? '，' + (samples.length - remove.length) + ' 個仍有場次使用的範例劇本改為下架' : ''));
+/**
+ * 從劇本庫刪除早期的範例劇本（id 為 s-sample-*），連同使用這些劇本的場次與其參與者（皆為測試資料）。
+ * 可重複執行。
+ */
+function removeSampleScripts() {
+  withLock_(function () {
+    const isSample = function (id) { return String(id).indexOf('s-sample-') === 0; };
+    const samples = readAll_('scripts').filter(function (r) { return isSample(r.id); });
+    const sessions = readAll_('sessions').filter(function (s) { return isSample(s.script_id); });
+    const sessionIds = {};
+    sessions.forEach(function (s) { sessionIds[s.id] = true; });
+    const participants = readAll_('participants').filter(function (p) { return sessionIds[p.session_id]; });
+    deleteRows_('participants', participants.map(function (r) { return r._row; }));
+    deleteRows_('sessions', sessions.map(function (r) { return r._row; }));
+    deleteRows_('scripts', samples.map(function (r) { return r._row; }));
+    Logger.log('已刪除 ' + samples.length + ' 個範例劇本、' + sessions.length + ' 個使用範例劇本的場次、' + participants.length + ' 位參與者');
   });
 }
 

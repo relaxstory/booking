@@ -29,7 +29,7 @@ const subjects = (mails) => mails.map((m) => `${m.to} ${m.subject.replace(/：.*
 
 beforeEach(() => {
   gas = createGas(NOW);
-  gas.run('setup()');
+  gas.setup();
   token = gas.post({ action: 'admin_login', id_token: 'mock:owner@example.com' }).token;
   take();
 });

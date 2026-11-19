@@ -109,6 +109,7 @@ relax-story-lab-schedule/
 ### 階段 5：測試與上線（進行中）
 
 - 正式劇本：沿用官網 6 本（`backend/src/Setup.js` 的 `OFFICIAL_SCRIPTS_`，id 為官網網址代號）；於編輯器執行 `importOfficialScripts` 匯入（可重複執行，保留試算表中填寫的價格與上下架）
+- 範例劇本已自程式移除（`setup` 不再建立劇本；測試用劇本只存在於 `backend/test`）；試算表中的範例劇本以 `removeSampleScripts` 刪除（連同使用它們的測試場次與參與者）
 - 男女人數依角色配置（拼場缺額用）；1/2世界推理法則角色不限性別，留空
 - 價格：前台選單會顯示，目前留空，之後直接在試算表 scripts 的 `price` 欄填寫
 - 店家聯繫管道與隱私權聯絡窗口：Instagram @kac_larpgm（前台 `frontend/src/site.ts`、通知信 `backend/src/Config.js` 的 `SHOP.contact`）

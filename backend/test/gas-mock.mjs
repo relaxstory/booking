@@ -7,6 +7,13 @@ import { MOCK_CLIENT_ID, MockSpreadsheet, makeGlobals } from './gas-env.mjs';
 
 const SRC = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'src');
 
+/** 測試用劇本（正式資料不含這些劇本） */
+export const SAMPLE_SCRIPTS = [
+  { id: 's-sample-1', name: '範例劇本・六人本', players: 6, duration_min: 240, male: 3, female: 3, price: 600, active: 'TRUE' },
+  { id: 's-sample-2', name: '範例劇本・四人本', players: 4, duration_min: 180, male: 2, female: 2, price: 500, active: 'TRUE' },
+  { id: 's-sample-3', name: '範例劇本・七人本（下架）', players: 7, duration_min: 300, male: 4, female: 3, price: 700, active: 'FALSE' },
+];
+
 /** 建立一個全新的模擬環境；now 為 ISO 字串（含時區） */
 export function createGas(now) {
   const ss = new MockSpreadsheet();
@@ -29,6 +36,11 @@ export function createGas(now) {
     /** 寄出的信 */
     mails,
     triggers,
+    /** 執行 setup() 並加入測試用劇本 */
+    setup() {
+      vm.runInContext('setup()', ctx);
+      vm.runInContext(`${JSON.stringify(SAMPLE_SCRIPTS)}.forEach(function (s) { insert_('scripts', s); })`, ctx);
+    },
     setNow(iso) {
       current = new Date(iso);
     },
