@@ -131,6 +131,9 @@ export const MOCK_CLIENT_ID = 'mock-client-id';
  */
 export function makeGlobals(state) {
   const cache = new Map();
+  /** 寄出的信（MailApp.sendEmail 的參數） */
+  const mails = [];
+  const triggers = [];
   const tokeninfo = (url) => {
     const m = /[?&]id_token=([^&]*)/.exec(url);
     const token = m ? decodeURIComponent(m[1]) : '';
@@ -146,9 +149,36 @@ export function makeGlobals(state) {
       },
     };
   };
+  const triggerBuilder = (handler) => {
+    const t = { handler, getHandlerFunction: () => handler };
+    const b = {
+      timeBased: () => b,
+      everyDays: (n) => ((t.everyDays = n), b),
+      atHour: (h) => ((t.atHour = h), b),
+      inTimezone: (z) => ((t.tz = z), b),
+      create: () => (triggers.push(t), t),
+    };
+    return b;
+  };
   return {
     cache,
+    mails,
+    triggers,
     globals: {
+      MailApp: {
+        sendEmail: (o) => void mails.push(o),
+        getRemainingDailyQuota: () => 100,
+      },
+      ScriptApp: {
+        AuthMode: { FULL: 'FULL' },
+        requireAllScopes() {},
+        getProjectTriggers: () => [...triggers],
+        deleteTrigger: (t) => {
+          const i = triggers.indexOf(t);
+          if (i >= 0) triggers.splice(i, 1);
+        },
+        newTrigger: triggerBuilder,
+      },
       console,
       SpreadsheetApp: { openById: () => state.ss },
       LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock() {} }) },

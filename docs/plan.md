@@ -73,13 +73,14 @@ relax-story-lab-schedule/
 
 **完成標準**：玩家可在手機上完成瀏覽、登記、申請加入。
 
-### 階段 3：後台（開發完成，待設定 OAuth 用戶端 ID 後部署）
+### 階段 3：後台 ✅（2026-11-19 完成）
 
 - 網址：`https://relaxstory.github.io/booking/admin.html`（獨立頁面，前台不含後台程式碼）
 - 登入：Google Identity Services 取得 ID token → 後端以 tokeninfo 驗證（aud、iss、email_verified、exp）並比對 admins → 發給 6 小時有效的後台憑證（CacheService）
 - 本機測試：`cd backend; npm test`（新增後台 11 項，共 29 項）
 - 本機預覽：`npm run dev` 後開 `/admin.html?mock`——瀏覽器內直接執行 `backend/src` 的後端程式碼與模擬試算表，按「模擬登入」即可操作（重新整理會重設資料）
-- 部署前：用戶端 ID 填入 `backend/src/Config.js` 的 `GOOGLE_CLIENT_ID` 與 `frontend/.env` 的 `VITE_GOOGLE_CLIENT_ID`；`clasp push` 後於編輯器執行一次 `authorize`（新增「連線至外部服務」權限）
+- OAuth 用戶端 ID 在 `backend/src/Config.js` 的 `GOOGLE_CLIENT_ID` 與 `frontend/.env` 的 `VITE_GOOGLE_CLIENT_ID`（兩者需相同）；新增「連線至外部服務」權限後需於編輯器執行一次 `authorize`
+- OAuth 同意畫面維持「測試中」：新增管理員時，除了寫入 admins 工作表，也要加到 Google Cloud Console 的「測試使用者」
 
 - Google 登入、admins 名單驗證。
 - 時間表檢視（週／月）。
@@ -90,7 +91,15 @@ relax-story-lab-schedule/
 
 **完成標準**：spec 第 6 節所有功能可操作。
 
-### 階段 4：通知與排程
+### 階段 4：通知與排程（開發完成，待於編輯器安裝排程並確認範例信）
+
+- 信件範本與收件者：`backend/src/Notify.js`；排程：`backend/src/Jobs.js`
+- 店家資訊（信件署名、聯繫管道）在 `backend/src/Config.js` 的 `SHOP`；`contact` 留空時信中請玩家直接回覆此信
+- 本機測試：`cd backend; npm test`（新增通知與排程 8 項，共 37 項）
+- 編輯器一次性操作：執行 `installTriggers`（授權寄信與觸發器權限、補齊 `reminded_at` 欄位、安裝每天 10:00 提醒與 03:00 個資清除）；執行 `sendTestEmails` 把 12 種通知的範例信寄到自己信箱
+- 提醒只寄「已預約」的場次；隔天開場但仍在招募中的拼場不寄
+- example.com、.test 等測試用網域不會實際寄出（冒煙測試不耗用寄信額度）
+
 - 各狀態變更的 Email 範本（spec 第 7 節）。
 - 前一日提醒觸發器。
 - 半年個資清除觸發器。
@@ -111,7 +120,7 @@ relax-story-lab-schedule/
 | 時機 | 事項 |
 |------|------|
 | 階段 0 | 第一次 push 時於瀏覽器登入 GitHub 授權；`clasp login` 以 Google 帳號授權 |
-| 階段 3 前 | 於 Google Cloud Console 建立 OAuth 用戶端 ID（屆時提供步驟） |
+| 階段 3 前 | 於 Google Cloud Console 建立 OAuth 用戶端 ID ✅ |
 | 階段 5 前 | 劇本清單、店名、官方聯繫管道、隱私權聯絡窗口 |
 
 ## 5. 網址

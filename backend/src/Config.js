@@ -18,10 +18,17 @@ const TZ = 'Asia/Taipei';
 /** 後台 Google 登入的 OAuth 用戶端 ID（公開值，非密鑰；需與 frontend/.env 的 VITE_GOOGLE_CLIENT_ID 相同） */
 const GOOGLE_CLIENT_ID = '298103485927-4647bjf0l5qn3e7m8bucf77davqq3f0r.apps.googleusercontent.com';
 
+/** 通知信使用的店家資訊（contact 留空時，信中請玩家直接回覆此信） */
+const SHOP = {
+  name: 'Re:LAX Story Lab',
+  url: 'https://relaxstory.github.io/',
+  contact: '',
+};
+
 /** 各工作表欄位（第一列為標題，依標題名稱讀寫，欄位順序可調整） */
 const SHEETS = {
   scripts: ['id', 'name', 'players', 'duration_min', 'male', 'female', 'price', 'active'],
-  sessions: ['id', 'type', 'script_id', 'start_at', 'end_at', 'status', 'passcode', 'created_at', 'updated_at', 'admin_note'],
+  sessions: ['id', 'type', 'script_id', 'start_at', 'end_at', 'status', 'passcode', 'created_at', 'updated_at', 'admin_note', 'reminded_at'],
   participants: ['id', 'session_id', 'status', 'is_host', 'name', 'nickname', 'phone', 'email', 'line_id', 'ig', 'count', 'male', 'female', 'note', 'created_at', 'updated_at', 'purged_at'],
   closures: ['id', 'start_at', 'end_at', 'note', 'created_at'],
   passcodes: ['code', 'created_at', 'expires_at', 'used_at', 'session_id'],
@@ -37,7 +44,13 @@ const RULES = {
   rateLimitCount: 5, // 同一 Email 在時間窗內最多送出次數
   rateLimitWindowSec: 600,
   maxScheduleDays: 62, // 時間表單次查詢最多天數
+  reminderHour: 10, // 每天此時（台北時間）寄出隔天場次的提醒
+  purgeHour: 3, // 每天此時清除過期個資
+  purgeMonths: 6, // 場次結束滿幾個月後清除參與者個資
 };
+
+/** 個資清除時清空的參與者欄位（spec 第 9 節） */
+const PERSONAL_FIELDS = ['name', 'phone', 'email', 'line_id', 'ig', 'note'];
 
 /** 佔用時段的場次狀態 */
 const OCCUPYING_STATUSES = ['pending', 'confirmed', 'recruiting'];

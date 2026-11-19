@@ -11,7 +11,7 @@ const SRC = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'src')
 export function createGas(now) {
   const ss = new MockSpreadsheet();
   let current = new Date(now);
-  const { cache, globals } = makeGlobals({ ss, now: () => new Date(current) });
+  const { cache, mails, triggers, globals } = makeGlobals({ ss, now: () => new Date(current) });
   const ctx = { ...globals };
   vm.createContext(ctx);
   const src = fs
@@ -26,6 +26,9 @@ export function createGas(now) {
 
   return {
     ss,
+    /** 寄出的信 */
+    mails,
+    triggers,
     setNow(iso) {
       current = new Date(iso);
     },

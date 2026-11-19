@@ -86,7 +86,8 @@ function handleJoin_(p) {
 
     const script = loadScripts_().filter(function (s) { return s.id === session.script_id; })[0];
     const players = script ? script.players : 0;
-    const joined = joinedTotals_(readAll_('participants'))[session.id];
+    const rows = readAll_('participants');
+    const joined = joinedTotals_(rows)[session.id];
     const remaining = players - (joined ? joined.count : 0);
     if (contact.count > remaining) {
       fail_('exceeds_remaining', '人數超過剩餘名額（剩 ' + Math.max(0, remaining) + ' 人）', { field: 'count' });
@@ -97,7 +98,12 @@ function handleJoin_(p) {
       { id: newId_(), session_id: session.id, status: 'applied', is_host: 'FALSE', created_at: ts, updated_at: ts, purged_at: '' },
       contact
     ));
-    notify_('join_applied', { session: session, script: script, participants: [applicant] });
+    notify_('join_applied', {
+      session: session,
+      script: script,
+      participants: rows.filter(function (r) { return r.session_id === session.id && r.status === 'joined'; }),
+      participant: applicant,
+    });
     return { ok: true, status: 'applied' };
   });
 }
