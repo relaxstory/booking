@@ -91,7 +91,7 @@ relax-story-lab-schedule/
 
 **完成標準**：spec 第 6 節所有功能可操作。
 
-### 階段 4：通知與排程（開發完成，待於編輯器安裝排程並確認範例信）
+### 階段 4：通知與排程 ✅（2026-11-20 完成）
 
 - 信件範本與收件者：`backend/src/Notify.js`；排程：`backend/src/Jobs.js`
 - 店家資訊（信件署名、聯繫管道）在 `backend/src/Config.js` 的 `SHOP`；`contact` 留空時信中請玩家直接回覆此信

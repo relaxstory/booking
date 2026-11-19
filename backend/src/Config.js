@@ -21,7 +21,7 @@ const GOOGLE_CLIENT_ID = '298103485927-4647bjf0l5qn3e7m8bucf77davqq3f0r.apps.goo
 /** 通知信使用的店家資訊（contact 留空時，信中請玩家直接回覆此信） */
 const SHOP = {
   name: 'Re:LAX Story Lab',
-  url: 'https://relaxstory.github.io/',
+  url: 'https://relaxstory.github.io/booking/',
   contact: '',
 };
 
