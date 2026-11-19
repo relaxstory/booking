@@ -1,20 +1,26 @@
 :root {
-  --bg: #f6f4f0;
+  /* 配色取自官網 Logo：深藍 #1b2431、金色 #b08e61、米白底（與 https://relaxstory.github.io/ 一致） */
+  --bg: #fbf9f4;
   --surface: #ffffff;
-  --surface-2: #f0ede7;
-  --text: #22252b;
-  --muted: #6b6f78;
-  --border: #e2ddd4;
-  --grid-line: #ece8e1;
-  --accent: #a4472a;
-  --accent-text: #ffffff;
-  --focus: #2f6fdb;
+  --surface-2: #f4efe5;
+  --text: #1b2431;
+  --muted: #5c6370;
+  --border: #e7dfd0;
+  --grid-line: #efe8dc;
+  --accent: #1b2431; /* 主要按鈕、選取中的日期 */
+  --accent-text: #fbf9f4;
+  --link: #8a6a3e; /* 連結文字（深金色，維持可讀性） */
+  --gold: #b08e61; /* 裝飾線、Logo 金色 */
+  --focus: #8a6a3e;
   --error: #b42318;
   --error-bg: #fdecea;
 
-  --booked-bg: #e6e9f2;
-  --booked-edge: #3c4b78;
-  --booked-text: #27304d;
+  --sans: 'Noto Sans TC', system-ui, -apple-system, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --serif: 'Cormorant Garamond', 'Noto Serif TC', 'Songti TC', serif;
+
+  --booked-bg: #e7eaf1;
+  --booked-edge: #1b2431;
+  --booked-text: #1b2431;
   --pending-bg: #fdf3e1;
   --pending-stripe: #f8e4bd;
   --pending-edge: #c98618;
@@ -25,27 +31,29 @@
   --closure-bg: #ebebeb;
   --closure-stripe: #dedede;
   --closure-text: #6b6b6b;
-  --past-bg: #f3f1ed;
+  --past-bg: #f4f1ea;
 
   --ppm: 0.9px; /* 每分鐘的高度 */
   --radius: 10px;
-  font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--sans);
   color-scheme: light;
   -webkit-text-size-adjust: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #17181b;
-    --surface: #212226;
-    --surface-2: #2a2b30;
-    --text: #ecebe8;
-    --muted: #a1a3aa;
-    --border: #36373d;
-    --grid-line: #2c2d32;
-    --accent: #e0805f;
-    --accent-text: #1b0f0a;
-    --focus: #7aa7ff;
+    --bg: #14171c;
+    --surface: #1d2128;
+    --surface-2: #252a32;
+    --text: #ece7de;
+    --muted: #a3a8b1;
+    --border: #343a44;
+    --grid-line: #2a2f37;
+    --accent: #c9a670;
+    --accent-text: #14171c;
+    --link: #d4b483;
+    --gold: #c9a670;
+    --focus: #d4b483;
     --error: #ff8a80;
     --error-bg: #3a1f1d;
 
@@ -79,7 +87,7 @@ body {
 }
 
 a {
-  color: var(--accent);
+  color: var(--link);
 }
 
 :focus-visible {
@@ -99,23 +107,70 @@ main {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
-.brand {
+.brand-row {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 14px 0;
-  text-decoration: none;
-  color: var(--text);
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
 }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+}
+.brand-logo {
+  width: 40px;
+  height: auto;
+  flex-shrink: 0;
+}
 .brand-name {
-  font-weight: 700;
-  font-size: 1.15rem;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.35rem;
   letter-spacing: 0.02em;
+  line-height: 1;
+}
+.brand-name em {
+  font-style: normal;
+  color: var(--gold);
 }
 .brand-tag {
   color: var(--muted);
   font-size: 0.875rem;
+  text-decoration: none;
+  padding-left: 10px;
+  border-left: 1px solid var(--gold);
+  line-height: 1.2;
+}
+.home-link {
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+/* 手機：隱藏副標，讓「回官網」與店名同一行（Logo 本身也連回官網） */
+@media (max-width: 480px) {
+  .brand-tag {
+    display: none;
+  }
+  .brand-name {
+    font-size: 1.2rem;
+  }
+}
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-variant-numeric: lining-nums;
 }
 main {
   padding-top: 16px;
@@ -195,7 +250,7 @@ button:disabled {
 /* 手機：日期選擇列 */
 .day-strip {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 4px;
   margin-bottom: 12px;
 }
@@ -224,6 +279,13 @@ button:disabled {
 .chip-date {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+/* 小螢幕（如 iPhone SE）：日期按鈕縮小字級，七天才放得下 */
+@media (max-width: 360px) {
+  .chip-date {
+    font-size: 0.78rem;
+    letter-spacing: -0.02em;
+  }
 }
 
 /* 時間表 */
