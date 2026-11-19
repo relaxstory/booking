@@ -106,7 +106,14 @@ relax-story-lab-schedule/
 
 **完成標準**：每種通知實際寄到測試信箱；清除程序以測試資料驗證。
 
-### 階段 5：測試與上線
+### 階段 5：測試與上線（進行中）
+
+- 正式劇本：沿用官網 6 本（`backend/src/Setup.js` 的 `OFFICIAL_SCRIPTS_`，id 為官網網址代號）；於編輯器執行 `importOfficialScripts` 匯入（可重複執行，保留試算表中填寫的價格與上下架）
+- 男女人數依角色配置（拼場缺額用）；1/2世界推理法則角色不限性別，留空
+- 價格：前台選單會顯示，目前留空，之後直接在試算表 scripts 的 `price` 欄填寫
+- 店家聯繫管道與隱私權聯絡窗口：Instagram @kac_larpgm（前台 `frontend/src/site.ts`、通知信 `backend/src/Config.js` 的 `SHOP.contact`）
+- 上線前於編輯器執行 `clearAllBookings` 清空所有場次、參與者、關閉時段、通關碼（劇本與管理者保留，無法復原）
+- 正式開放後，官網 `src/data/site.ts` 的 `bookingUrl` 改為 `'/booking/'`（官網 repo）
 - 匯入正式劇本資料、填入店家資訊。
 - 手機／電腦實測完整流程。
 - 清除測試資料，正式公開網址。

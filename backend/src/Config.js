@@ -22,7 +22,7 @@ const GOOGLE_CLIENT_ID = '298103485927-4647bjf0l5qn3e7m8bucf77davqq3f0r.apps.goo
 const SHOP = {
   name: 'Re:LAX Story Lab',
   url: 'https://relaxstory.github.io/booking/',
-  contact: '',
+  contact: 'Instagram @kac_larpgm',
 };
 
 /** 各工作表欄位（第一列為標題，依標題名稱讀寫，欄位順序可調整） */

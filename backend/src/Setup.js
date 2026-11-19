@@ -93,6 +93,74 @@ function sendTestEmails() {
   Logger.log('已寄出 ' + sent + ' 封範例信到 ' + me);
 }
 
+/**
+ * 正式劇本（與官網 src/content/scripts 一致；id 使用官網網址代號）。
+ * male／female 為角色配置的男女人數，用於拼場的男女缺額；角色性別不限時留空。
+ * price 為每人價格，留空則前台不顯示；之後可直接在試算表填寫。
+ */
+const OFFICIAL_SCRIPTS_ = [
+  { id: 'chutao-lianticun', name: '出逃連體村', players: 5, duration_min: 270, male: 1, female: 4 },
+  { id: 'tongliu-hewu', name: '同流合屋', players: 5, duration_min: 180, male: 3, female: 2 },
+  { id: 'yaomo-guiguai', name: '妖魔鬼怪', players: 5, duration_min: 180, male: 3, female: 2 },
+  { id: 'zuolao-chaonengzhe', name: '坐牢の超能者殺人日常', players: 5, duration_min: 150, male: 5, female: 0 },
+  { id: 'diesu', name: '蝶溯', players: 5, duration_min: 210, male: 2, female: 3 },
+  { id: 'half-world-deduction', name: '1/2世界推理法則', players: 6, duration_min: 420, male: '', female: '' },
+];
+
+/**
+ * 匯入正式劇本（可重複執行）：
+ *   - 已存在的劇本（同 id）更新名稱、人數、時長、男女人數，保留價格與上下架狀態
+ *   - 不存在的新增為上架
+ *   - 範例劇本（s-sample-*）沒有場次使用時刪除；仍有場次時改為下架
+ */
+function importOfficialScripts() {
+  withLock_(function () {
+    const existing = indexBy_(readAll_('scripts'), 'id');
+    OFFICIAL_SCRIPTS_.forEach(function (s) {
+      const row = existing[s.id];
+      if (row) {
+        update_('scripts', Object.assign(row, s));
+      } else {
+        insert_('scripts', Object.assign({ price: '', active: 'TRUE' }, s));
+      }
+    });
+
+    const used = {};
+    readAll_('sessions').forEach(function (x) { used[x.script_id] = true; });
+    const samples = readAll_('scripts').filter(function (r) { return r.id.indexOf('s-sample-') === 0; });
+    const remove = [];
+    samples.forEach(function (r) {
+      if (used[r.id]) {
+        r.active = 'FALSE';
+        update_('scripts', r);
+      } else {
+        remove.push(r._row);
+      }
+    });
+    deleteRows_('scripts', remove);
+    Logger.log('已匯入 ' + OFFICIAL_SCRIPTS_.length + ' 個正式劇本；刪除 ' + remove.length + ' 個範例劇本'
+      + (samples.length > remove.length ? '，' + (samples.length - remove.length) + ' 個仍有場次使用的範例劇本改為下架' : ''));
+  });
+}
+
+/** 上線前使用：清空的工作表（劇本與管理者保留） */
+const BOOKING_SHEETS_ = ['sessions', 'participants', 'closures', 'passcodes'];
+
+/**
+ * 上線前清空所有場次、參與者、關閉時段、通關碼（保留劇本與管理者），無法復原。
+ * 執行後立即刪除、不會再詢問；正式上線後請勿執行。
+ */
+function clearAllBookings() {
+  withLock_(function () {
+    const counts = BOOKING_SHEETS_.map(function (name) {
+      const rows = readAll_(name).map(function (r) { return r._row; });
+      deleteRows_(name, rows);
+      return name + ' ' + rows.length;
+    });
+    Logger.log('已清空：' + counts.join('、'));
+  });
+}
+
 /** 刪除測試資料：主揪姓名以「TEST-」開頭的場次及其所有參與者 */
 function purgeTestData() {
   withLock_(function () {

@@ -46,7 +46,7 @@ test('前台登記：通關碼直接成立才寄「預約成立」，待確認�
   assert.match(m.body, /時間：2026\/11\/20（五） 14:00–18:00/);
   assert.match(m.body, /劇本：範例劇本・六人本（6 人・4 小時）/);
   assert.match(m.body, /你這組：6 人（男 3・女 3）/);
-  assert.match(m.body, /請直接回覆此信與店家聯繫/);
+  assert.match(m.body, /如需修改或取消，請聯繫店家（Instagram @kac_larpgm）。/);
 
   book({ date: '2026-11-21' }); // 待確認
   book({ date: '2026-11-22', count: 2, male: 1, female: 1 }); // 拼團待確認
