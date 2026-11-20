@@ -47,7 +47,7 @@ function handleScripts_() {
  *   sort_order    排序（數字小的在前，空白排最後）
  *   badge         新上架／熱門（其他值不顯示）
  *   tagline       一句話簡介
- *   genres        類型標籤，以 / 、 , 分隔（例：推理/還原/戀陪）
+ *   genres        類型標籤，以 / 、 , 分隔（例：推理/還原/戀陪；可反串的劇本加上「可反串」）
  *   gender_advice 玩家性別建議（例：1女1男、不限）
  *   series        系列
  *   adapted       TRUE = 劇本繁化
@@ -60,7 +60,6 @@ function handleScripts_() {
  *   experience    經驗需求（例：新手可）
  *   reading_load  閱讀量（例：6000字／共同資訊多）
  *   curator_note  館長筆記（推薦詞，儲存格內換行即分段）
- *   crossplay     TRUE = 可反串（官網顯示「可反串」標記；空白／FALSE 不顯示）
  * 角色配置由 male／female 推算（兩者皆空白 = 不限）。
  */
 
@@ -117,7 +116,6 @@ function catalogScript_(r) {
     experience: cellText_(r.experience),
     reading_load: cellText_(r.reading_load),
     curator_note: cellText_(r.curator_note),
-    crossplay: bool_(r.crossplay),
   };
 }
 
