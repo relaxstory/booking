@@ -53,7 +53,13 @@ function handleScripts_() {
  *   adapted       TRUE = 劇本繁化
  *   difficulty    推理難度 1–5（空白不顯示）
  *   hosts         主持人代號，以 , 分隔（對應官網 src/content/hosts 檔名，例：kaike）
- *   description   劇本介紹（儲存格內換行即分段）
+ *   description   故事簡介（儲存格內換行；空一行 = 分段）
+ *   author        作者
+ *   features      特色，以 / 、 , 分隔（例：強設定推理/平行時空）
+ *   suits         適合哪些玩家，以 / 、 , 分隔（例：喜歡設定推理/還原時間線）
+ *   experience    經驗需求（例：新手可）
+ *   reading_load  閱讀量（例：6000字／共同資訊多）
+ *   curator_note  館長筆記（推薦詞，儲存格內換行即分段）
  * 角色配置由 male／female 推算（兩者皆空白 = 不限）。
  */
 
@@ -104,6 +110,12 @@ function catalogScript_(r) {
     hosts: splitList_(r.hosts),
     price: cellText_(r.price) === '' || isNaN(Number(r.price)) ? null : Number(r.price),
     description: cellText_(r.description),
+    author: cellText_(r.author),
+    features: splitList_(r.features),
+    suits: splitList_(r.suits),
+    experience: cellText_(r.experience),
+    reading_load: cellText_(r.reading_load),
+    curator_note: cellText_(r.curator_note),
   };
 }
 

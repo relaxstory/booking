@@ -183,7 +183,19 @@ const SITE_CATALOG_ = [
   { id: 'tongliu-hewu', site_status: '上架中', featured: 'FALSE', sort_order: '2', badge: '新上架', tagline: '玩完之後有東西回不去了', genres: '還原/歡樂/吃瓜', gender_advice: '不限', series: '牛鬼蛇神系列', adapted: 'TRUE', hosts: 'kaike' },
   { id: 'yaomo-guiguai', site_status: '上架中', featured: 'FALSE', sort_order: '3', badge: '新上架', tagline: '丹丹好吃', genres: '還原/歡樂/吃瓜', gender_advice: '不限', series: '牛鬼蛇神系列', adapted: 'TRUE', hosts: 'kaike' },
   { id: 'zuolao-chaonengzhe', site_status: '上架中', featured: 'FALSE', sort_order: '4', badge: '', tagline: '超能力當然是用來殺人呀', genres: '推理/歡樂/中二', gender_advice: '不限', series: '超能宇宙系列', adapted: 'FALSE', hosts: 'kaike' },
-  { id: 'diesu', site_status: '上架中', featured: 'TRUE', sort_order: '5', badge: '', tagline: '交錯的人生，但只愛你一人', genres: '推理/還原/沉浸', gender_advice: '3女2男', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  {
+    id: 'diesu', site_status: '上架中', featured: 'TRUE', sort_order: '5', badge: '', tagline: '交錯的人生，但只愛你一人', genres: '推理/還原/沉浸', gender_advice: '3女2男', series: '', adapted: 'FALSE', hosts: 'kaike',
+    author: '小游《請將我深埋》', features: '強設定推理/平行時空', suits: '喜歡設定推理/還原時間線', experience: '新手可', reading_load: '6000字／共同資訊多',
+    description: [
+      '如何殺死一個死亡回溯者？',
+      '死後可以復活，還能在平行時空裡穿梭，「不是我喜歡的世界，那創造下一個。」',
+      '百年一遇的日全食突然出現，在那之後，世界似乎變得有些奇怪。',
+      '我的愛人把我當陌生人？\n這裡有長得一模一樣的人？\n我看見了已死之人？',
+      '故事要從一場「血色婚禮」說起：新郎與新娘剛剛舉辦完婚禮，新娘就被人謀殺……',
+      '在無窮無盡的人生分支裡，總有一個你，一生幸福。',
+    ].join('\n\n'),
+    curator_note: '平行時空的設定雖然已經在許多故事中被使用了，但這種命運的交錯感依然讓人難忘呢……',
+  },
   { id: 'half-world-deduction', site_status: '上架中', featured: 'TRUE', sort_order: '6', badge: '熱門', tagline: '有瓜吃瓜，邊推邊吃', genres: '推理/建築/城限', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
 ];
 

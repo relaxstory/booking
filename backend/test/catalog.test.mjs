@@ -16,7 +16,7 @@ const edit = (id, fields) =>
 
 test('setup 會補上官網目錄欄位', () => {
   const header = gas.rows('scripts')[0];
-  for (const k of ['site_status', 'featured', 'sort_order', 'badge', 'tagline', 'genres', 'gender_advice', 'series', 'adapted', 'difficulty', 'hosts', 'description']) {
+  for (const k of ['site_status', 'featured', 'sort_order', 'badge', 'tagline', 'genres', 'gender_advice', 'series', 'adapted', 'difficulty', 'hosts', 'description', 'author', 'features', 'suits', 'experience', 'reading_load', 'curator_note']) {
     assert.ok(k in header, k);
   }
 });
@@ -73,4 +73,22 @@ test('catalog 不含任何預約或個資欄位', () => {
   gas.run('importSiteCatalog()');
   const keys = new Set(catalog().flatMap((s) => Object.keys(s)));
   for (const k of ['name_', 'phone', 'email', 'line_id', 'ig', 'note', '_row']) assert.ok(!keys.has(k), k);
+});
+
+test('catalog：簡介、館長筆記、適性資訊（蝶溯）', () => {
+  gas.run('importSiteCatalog()');
+  const d = catalog().find((s) => s.id === 'diesu');
+  assert.equal(d.author, '小游《請將我深埋》');
+  assert.deepEqual(d.features, ['強設定推理', '平行時空']);
+  assert.deepEqual(d.suits, ['喜歡設定推理', '還原時間線']);
+  assert.equal(d.experience, '新手可');
+  assert.equal(d.reading_load, '6000字／共同資訊多');
+  assert.match(d.curator_note, /命運的交錯感/);
+  const paras = d.description.split('\n\n');
+  assert.equal(paras.length, 6);
+  assert.equal(paras[0], '如何殺死一個死亡回溯者？');
+  assert.equal(paras[3].split('\n').length, 3);
+  // 其他劇本沒有這些資料時為空值
+  const c = catalog().find((s) => s.id === 'tongliu-hewu');
+  assert.deepEqual([c.author, c.features, c.suits, c.curator_note], ['', [], [], '']);
 });
