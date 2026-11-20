@@ -34,7 +34,7 @@ export function openJoin(app: App, b: SessionBlock): void {
     h('p', { class: 'form-error', role: 'alert' }),
     h('fieldset', { class: 'group' },
       h('legend', null, '人數'),
-      peopleFields(remaining, 1),
+      peopleFields(remaining),
       h('p', { class: 'hint' }, `最多 ${remaining} 人。可以和朋友一起申請。缺額僅供參考，由店家決定是否核准。`),
     ),
     contactFields('不公開，方便店家與主揪稱呼你'),
@@ -49,7 +49,7 @@ export function openJoin(app: App, b: SessionBlock): void {
     ev.preventDefault();
     clearErrors(form);
     const contact = readContact(form);
-    if (contact && contact.count > remaining) showError(form, `人數超過剩餘名額（剩 ${remaining} 人）`, 'count');
+    if (contact && contact.count > remaining) showError(form, `人數超過剩餘名額（剩 ${remaining} 人）`, 'male');
     if (!contact || contact.count > remaining) return;
     submit.disabled = true;
     submit.textContent = '送出中…';

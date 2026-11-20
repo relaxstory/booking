@@ -152,7 +152,7 @@ export function openSessionForm(app: AdminApp, opts: { session?: AdminSession; p
       field('admin_note', '後台備註', note, { hint: '僅後台可見' }),
     ),
     !s && [
-      h('fieldset', { class: 'group' }, h('legend', null, '人數'), peopleFields(99, scripts[0].players)),
+      h('fieldset', { class: 'group' }, h('legend', null, '人數'), peopleFields(99)),
       contactFields('拼場時會公開顯示為主揪暱稱'),
     ],
     submit,
@@ -237,7 +237,7 @@ export function openSessionForm(app: AdminApp, opts: { session?: AdminSession; p
       const c = readContact(form, { consent: false });
       if (!c) return;
       if (c.count > script().players) {
-        showError(form, `人數不可超過劇本人數（${script().players} 人）`, 'count');
+        showError(form, `人數不可超過劇本人數（${script().players} 人）`, 'male');
         return;
       }
       const { website: _w, ...rest } = c;
@@ -267,7 +267,7 @@ export function openSessionForm(app: AdminApp, opts: { session?: AdminSession; p
 
 /* ───────── 參與者表單 ───────── */
 
-const CONTACT_KEYS = ['name', 'nickname', 'phone', 'email', 'line_id', 'ig', 'note', 'count', 'male', 'female'] as const;
+const CONTACT_KEYS = ['nickname', 'email', 'line_id', 'ig', 'note', 'male', 'female'] as const;
 
 /** 新增（p 為空）或編輯參與者資料與人數 */
 export function openParticipantForm(app: AdminApp, s: AdminSession, p: AdminParticipant | null, onDone: () => void): void {
@@ -279,7 +279,7 @@ export function openParticipantForm(app: AdminApp, s: AdminSession, p: AdminPart
     h('p', { class: 'hint' }, `${s.script_name}・${whenLabel(s)}・目前 ${headcount(s)}`),
     h('fieldset', { class: 'group' },
       h('legend', null, '人數'),
-      peopleFields(99, 1),
+      peopleFields(99),
       h('p', { class: 'hint' }, p?.status === 'applied' ? '申請中的人數在核准後才會計入。' : `此場最多還可加入 ${Math.max(0, remaining)} 人。`),
     ),
     contactFields('拼場的主揪暱稱會公開顯示'),
@@ -292,6 +292,7 @@ export function openParticipantForm(app: AdminApp, s: AdminSession, p: AdminPart
       const el = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${k}"]`);
       if (el) el.value = String(p[k] ?? '');
     }
+    form.querySelector('.people')?.dispatchEvent(new Event('input')); // 更新「共 N 人」
   }
   form.addEventListener('input', (ev) => (ev.target as HTMLElement).closest('.field')?.classList.remove('has-error'));
   form.addEventListener('submit', async (ev) => {

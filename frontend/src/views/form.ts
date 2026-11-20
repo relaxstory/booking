@@ -81,26 +81,41 @@ export function showError(form: HTMLElement, message: string, fieldName?: string
 export function contactFields(nicknameHint = '登記拼團時，會以主揪身分公開顯示在時間表上'): HTMLElement {
   return h('fieldset', { class: 'group' },
     h('legend', null, '聯絡資料'),
-    field('name', '姓名', input({ autocomplete: 'name', maxlength: 50, required: true }), { required: true, hint: '不公開，僅店家可見' }),
     field('nickname', '暱稱', input({ autocomplete: 'nickname', maxlength: 30, required: true }), { required: true, hint: nicknameHint }),
-    field('phone', '電話', input({ type: 'tel', autocomplete: 'tel', maxlength: 20, required: true }), { required: true }),
-    field('email', 'Email', input({ type: 'email', autocomplete: 'email', maxlength: 100, required: true }), { required: true, hint: '預約確認與通知會寄到這裡' }),
+    field('email', 'Email', input({ type: 'email', autocomplete: 'email', maxlength: 100, required: true }), { required: true, hint: '用於寄送預約確認信與後續通知（不公開）' }),
+    h('p', { class: 'hint contact-note' }, h('strong', null, 'LINE 或 IG 是我們主要的聯繫方式'), '，請至少填寫一項（不公開）。'),
     h('div', { class: 'row-2' },
       field('line_id', 'LINE ID', input({ maxlength: 50 })),
       field('ig', 'IG 帳號', input({ maxlength: 50 })),
     ),
-    h('p', { class: 'hint' }, 'LINE ID 與 IG 帳號請至少填寫一項。'),
     field('note', '備註', h('textarea', { rows: 2, maxlength: 500 })),
   );
 }
 
-/** 人數欄位（總人數、男、女） */
-export function peopleFields(max: number, initial: number): HTMLElement {
-  return h('div', { class: 'row-3' },
-    field('count', '人數', numberInput(1, max, initial), { required: true }),
-    field('male', '男', numberInput(0, max, 0), { required: true }),
-    field('female', '女', numberInput(0, max, 0), { required: true }),
+/** 人數欄位：只填男、女人數，總人數自動加總顯示（showTotal: false 時由呼叫端自行顯示，例如登記表單的包場／拼團說明） */
+export function peopleFields(max: number, opts: { showTotal?: boolean } = {}): HTMLElement {
+  const total = h('p', { class: 'people-total', 'aria-live': 'polite', hidden: opts.showTotal === false });
+  const wrap = h('div', { class: 'people' },
+    h('div', { class: 'row-2' },
+      field('male', '男', numberInput(0, max, 0), { required: true }),
+      field('female', '女', numberInput(0, max, 0), { required: true }),
+    ),
+    total,
   );
+  const update = () => {
+    const n = peopleCount(wrap);
+    total.textContent = n > 0 ? `共 ${n} 人` : '請填寫男女人數';
+  };
+  wrap.addEventListener('input', update);
+  update();
+  return wrap;
+}
+
+/** 目前填寫的總人數（男 + 女；未填視為 0） */
+export function peopleCount(form: HTMLElement): number {
+  const m = num(form, 'male');
+  const f = num(form, 'female');
+  return (Number.isInteger(m) && m > 0 ? m : 0) + (Number.isInteger(f) && f > 0 ? f : 0);
 }
 
 export function consentField(): HTMLElement {
@@ -123,29 +138,26 @@ export function honeypot(): HTMLElement {
 
 /** 讀取並檢查聯絡資料與人數（與後端規則一致）；有錯回傳 null 並標示 */
 export function readContact(form: HTMLElement, opts: { consent?: boolean } = {}): Contact | null {
+  const male = num(form, 'male');
+  const female = num(form, 'female');
   const c: Contact = {
-    name: val(form, 'name'),
     nickname: val(form, 'nickname'),
-    phone: val(form, 'phone'),
     email: val(form, 'email'),
     line_id: val(form, 'line_id'),
     ig: val(form, 'ig'),
     note: val(form, 'note'),
-    count: num(form, 'count'),
-    male: num(form, 'male'),
-    female: num(form, 'female'),
+    count: (Number.isInteger(male) ? male : 0) + (Number.isInteger(female) ? female : 0),
+    male,
+    female,
     website: val(form, 'website'),
   };
   const errors: [string, string][] = [];
-  if (!Number.isInteger(c.count) || c.count < 1) errors.push(['count', '請填寫人數']);
   if (!Number.isInteger(c.male) || c.male < 0) errors.push(['male', '請填寫男性人數']);
   if (!Number.isInteger(c.female) || c.female < 0) errors.push(['female', '請填寫女性人數']);
-  if (!errors.length && c.male + c.female !== c.count) errors.push(['male', '男女人數加總需等於總人數']);
-  if (!c.name) errors.push(['name', '請填寫姓名']);
+  if (!errors.length && c.count < 1) errors.push(['male', '請填寫男女人數（至少 1 人）']);
   if (!c.nickname) errors.push(['nickname', '請填寫暱稱']);
-  if (!/^[0-9+\-() ]{8,20}$/.test(c.phone)) errors.push(['phone', c.phone ? '電話格式錯誤' : '請填寫電話']);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email)) errors.push(['email', c.email ? 'Email 格式錯誤' : '請填寫 Email']);
-  if (!c.line_id && !c.ig) errors.push(['line_id', 'LINE ID 與 IG 帳號請至少填寫一項']);
+  if (!c.line_id && !c.ig) errors.push(['line_id', 'LINE 或 IG 是主要聯繫方式，請至少填寫一項']);
   if (opts.consent !== false && !form.querySelector<HTMLInputElement>('[name="consent"]')?.checked) errors.push(['consent', '請勾選同意隱私權聲明']);
   // 由下往上標示，最後聚焦在第一個錯誤
   for (const [f, m] of errors.reverse()) showError(form, m, f);

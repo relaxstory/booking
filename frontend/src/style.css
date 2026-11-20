@@ -704,3 +704,18 @@ input.mono {
 .prose p {
   margin: 4px 0;
 }
+
+/* 人數：男女加總 */
+.people-total {
+  margin: 4px 0 0;
+  font-weight: 600;
+  color: var(--text);
+}
+/* 聯絡資料：主要聯繫方式說明 */
+.contact-note {
+  margin: 4px 0 6px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--gold);
+  background: var(--surface-2);
+  border-radius: 0 6px 6px 0;
+}

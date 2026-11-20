@@ -43,14 +43,14 @@ export interface ClosureBlock {
 export type Block = SessionBlock | ClosureBlock;
 
 export interface Contact {
-  name: string;
+  name?: string; // 已從表單移除；後台舊資料可能仍有
   nickname: string;
-  phone: string;
+  phone?: string; // 已從表單移除；後台舊資料可能仍有
   email: string;
   line_id: string;
   ig: string;
   note: string;
-  count: number;
+  count: number; // = male + female（由男女人數計算）
   male: number;
   female: number;
   website: string; // 陷阱欄位

@@ -3,7 +3,7 @@ import { ApiError, api, type BookStatus, type Script } from '../api.ts';
 import { clear, h } from '../dom.ts';
 import { startOptions } from '../layout.ts';
 import { dateLabel, dayNum, dayStr, durationLabel, hmToMin, minToHm, rangeLabel } from '../time.ts';
-import { clearErrors, consentField, contactFields, field, honeypot, input, num, openDialog, peopleFields, readContact, showError, val } from './form.ts';
+import { clearErrors, consentField, contactFields, field, honeypot, input, openDialog, peopleCount, peopleFields, readContact, showError, val } from './form.ts';
 
 const RESULT: Record<BookStatus, { title: string; text: string }> = {
   confirmed: { title: '預約成功', text: '通關碼已確認，預約已成立。確認信會寄到你的 Email。' },
@@ -48,7 +48,7 @@ export function openBooking(app: App, prefill: { date?: number; start?: number }
     ),
     h('fieldset', { class: 'group' },
       h('legend', null, '人數'),
-      peopleFields(99, app.scripts[0].players),
+      peopleFields(99, { showTotal: false }),
       modeInfo,
       passcodeField,
     ),
@@ -121,33 +121,29 @@ export function openBooking(app: App, prefill: { date?: number; start?: number }
     timeInfo.append(notice ? ' ' : '', `${dateLabel(dayNum(dateIn.value))} ${rangeLabel(startAbs, startAbs + s.duration_min)}（${durationLabel(s.duration_min)}）`);
   }
 
-  /** 依人數顯示包場／拼團說明與通關碼欄位 */
+  /** 依男女人數加總，顯示包場／拼團說明與通關碼欄位 */
   function updateMode() {
     const s = script();
-    const count = num(form, 'count');
-    const countIn = form.querySelector<HTMLInputElement>('[name="count"]')!;
-    countIn.max = String(s.players);
+    const count = peopleCount(form);
     passcodeField.hidden = true;
     modeInfo.className = 'mode-info';
-    if (!Number.isInteger(count) || count < 1) {
-      modeInfo.textContent = `此劇本為 ${s.players} 人本。`;
+    if (count < 1) {
+      modeInfo.textContent = `此劇本為 ${s.players} 人本，請填寫男女人數。`;
     } else if (count > s.players) {
-      modeInfo.textContent = `人數超過劇本人數（${s.players} 人）。`;
+      modeInfo.textContent = `共 ${count} 人，超過劇本人數（${s.players} 人）。`;
       modeInfo.classList.add('is-error');
     } else if (count === s.players) {
-      modeInfo.textContent = `包場：人數已滿 ${s.players} 人。`;
+      modeInfo.textContent = `包場：共 ${count} 人，人數已滿 ${s.players} 人。`;
       modeInfo.classList.add('is-private');
       passcodeField.hidden = false;
     } else {
-      modeInfo.textContent = `拼團：還差 ${s.players - count} 人。送出後由店家確認，確認後才會公開招募；此時段在確認前不會保留。`;
+      modeInfo.textContent = `拼團：共 ${count} 人，還差 ${s.players - count} 人。送出後由店家確認，確認後才會公開招募；此時段在確認前不會保留。`;
       modeInfo.classList.add('is-group');
     }
-    submit.textContent = count === s.players ? '送出包場登記' : count < s.players ? '送出拼團登記' : '送出登記';
+    submit.textContent = count === s.players ? '送出包場登記' : count >= 1 && count < s.players ? '送出拼團登記' : '送出登記';
   }
 
   scriptSel.addEventListener('change', () => {
-    const countIn = form.querySelector<HTMLInputElement>('[name="count"]')!;
-    if (num(form, 'count') > script().players) countIn.value = String(script().players);
     updateMode();
     void updateStarts();
   });
@@ -155,7 +151,7 @@ export function openBooking(app: App, prefill: { date?: number; start?: number }
   startSel.addEventListener('change', () => updateTimeInfo());
   form.addEventListener('input', (ev) => {
     const name = (ev.target as HTMLElement).getAttribute('name');
-    if (name === 'count' || name === 'male' || name === 'female') updateMode();
+    if (name === 'male' || name === 'female') updateMode();
     (ev.target as HTMLElement).closest('.field')?.classList.remove('has-error');
   });
 
@@ -165,7 +161,7 @@ export function openBooking(app: App, prefill: { date?: number; start?: number }
     const s = script();
     const contact = readContact(form);
     if (!startSel.value) showError(form, '請選擇可預約的開場時間', 'start');
-    if (contact && contact.count > s.players) showError(form, `人數不可超過劇本人數（${s.players} 人）`, 'count');
+    if (contact && contact.count > s.players) showError(form, `人數不可超過劇本人數（${s.players} 人）`, 'male');
     if (!contact || !startSel.value || contact.count > s.players) return;
 
     const full = contact.count === s.players;
