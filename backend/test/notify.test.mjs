@@ -34,7 +34,7 @@ beforeEach(() => {
   take();
 });
 
-test('前台登記：通關碼直接成立才寄「預約成立」，待確認與拼團待確認不寄', () => {
+test('前台登記：通關碼直接成立寄「預約成立」；包場待確認、拼團待確認寄「已收到登記」', () => {
   const pc = admin('admin_passcode_create').code;
   const r = book({ passcode: pc, name: '王小明', email: 'ming@mail.com' });
   assert.equal(r.status, 'confirmed');
@@ -48,13 +48,27 @@ test('前台登記：通關碼直接成立才寄「預約成立」，待確認�
   assert.match(m.body, /你這組：6 人（男 3・女 3）/);
   assert.match(m.body, /如需修改或取消，請聯繫店家（Instagram @kac_larpgm）。/);
 
-  book({ date: '2026-11-21' }); // 待確認
-  book({ date: '2026-11-22', count: 2, male: 1, female: 1 }); // 拼團待確認
-  assert.deepEqual(take(), []);
+  book({ date: '2026-11-21', email: 'pending@mail.com' }); // 包場待確認
+  const [pm, ...more1] = take();
+  assert.equal(more1.length, 0);
+  assert.equal(pm.to, 'pending@mail.com');
+  assert.equal(pm.subject, '【Re:LAX Story Lab】已收到包場登記：2026/11/21（六） 14:00 範例劇本・六人本');
+  assert.match(pm.body, /目前為「待確認」，此時段已先為你保留。店家確認後會再寄信通知你。/);
+  assert.match(pm.body, /時間：2026\/11\/21（六） 14:00–18:00/);
+
+  book({ date: '2026-11-22', count: 2, male: 1, female: 1, email: 'group@mail.com' }); // 拼團待確認
+  const [gm, ...more2] = take();
+  assert.equal(more2.length, 0);
+  assert.equal(gm.to, 'group@mail.com');
+  assert.equal(gm.subject, '【Re:LAX Story Lab】已收到拼團登記：2026/11/22（日） 14:00 範例劇本・六人本');
+  assert.match(gm.body, /目前為「拼團待確認」/);
+  assert.match(gm.body, /確認前此時段尚未保留/);
+  assert.match(gm.body, /你這組：2 人（男 1・女 1）/);
 });
 
 test('包場：確認寄給登記者；修改時間與取消寄給該場所有人', () => {
   const p = book({ email: 'host@mail.com' });
+  assert.deepEqual(subjects(take()), ['host@mail.com 【Re:LAX Story Lab】已收到包場登記']);
   admin('admin_confirm', { session_id: p.session_id });
   assert.deepEqual(subjects(take()), ['host@mail.com 【Re:LAX Story Lab】預約成立']);
 
@@ -68,12 +82,14 @@ test('包場：確認寄給登記者；修改時間與取消寄給該場所有�
   assert.deepEqual(subjects(take()), ['host@mail.com 【Re:LAX Story Lab】場次已取消']);
 
   const r = book({ date: '2026-11-23', email: 'x@mail.com' });
+  take();
   admin('admin_reject', { session_id: r.session_id });
   assert.deepEqual(subjects(take()), ['x@mail.com 【Re:LAX Story Lab】預約未成立']);
 });
 
 test('拼場：開放招募寄主揪、申請與核准／拒絕寄申請者、成團與失敗寄所有人', () => {
   const g = book({ count: 2, male: 1, female: 1, email: 'host@mail.com' });
+  assert.deepEqual(subjects(take()), ['host@mail.com 【Re:LAX Story Lab】已收到拼團登記']);
   admin('admin_confirm', { session_id: g.session_id });
   const [opened] = take();
   assert.equal(opened.to, 'host@mail.com');

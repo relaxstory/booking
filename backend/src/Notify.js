@@ -5,7 +5,10 @@
  *   participants：該場「已加入」的參與者；participant：單一對象（申請者、被核准者等）
  *
  * 前台事件：
- *   booking_submitted     包場／拼團登記送出 → 登記者（僅「已預約」時寄出；待確認不寄）
+ *   booking_submitted     包場／拼團登記送出 → 登記者；依場次狀態改寄：
+ *                           已預約（有通關碼）→ 預約成立
+ *                           包場待確認 → booking_received（已收到包場登記）
+ *                           拼團待確認 → group_received（已收到拼團登記）
  *   join_applied          送出加入拼場申請 → participant
  * 後台事件：
  *   booking_confirmed     包場確認，或後台直接建立包場 → 登記者
@@ -25,13 +28,18 @@
  */
 
 /** 寄給登記者（主揪）的事件 */
-const HOST_EVENTS_ = ['booking_submitted', 'booking_confirmed', 'group_opened', 'booking_rejected'];
+const HOST_EVENTS_ = ['booking_submitted', 'booking_received', 'group_received', 'booking_confirmed', 'group_opened', 'booking_rejected'];
 /** 寄給單一參與者的事件 */
 const PARTICIPANT_EVENTS_ = ['join_applied', 'application_approved', 'application_rejected', 'participant_added'];
 
 function notify_(event, data) {
   try {
-    if (event === 'booking_submitted' && data.session.status !== 'confirmed') return 0;
+    if (event === 'booking_submitted') {
+      const st = data.session.status;
+      if (st === 'pending') event = 'booking_received';
+      else if (st === 'group_pending') event = 'group_received';
+      else if (st !== 'confirmed') return 0;
+    }
     let sent = 0;
     mailRecipients_(event, data).forEach(function (p) {
       if (sendMail_(p.email, buildMail_(event, data, p))) sent++;
@@ -156,6 +164,14 @@ function buildMail_(event, data, p) {
     case 'booking_confirmed':
       subject = '預約成立：' + when + ' ' + scriptName;
       intro = '你的包場預約已成立，期待你的光臨！';
+      break;
+    case 'booking_received':
+      subject = '已收到包場登記：' + when + ' ' + scriptName;
+      intro = '已收到你的包場登記，目前為「待確認」，此時段已先為你保留。店家確認後會再寄信通知你。';
+      break;
+    case 'group_received':
+      subject = '已收到拼團登記：' + when + ' ' + scriptName;
+      intro = '已收到你的拼團登記，目前為「拼團待確認」。店家確認後會公開在時間表上開始招募，並再寄信通知你；確認前此時段尚未保留。';
       break;
     case 'group_opened':
       subject = '拼場開始招募：' + when + ' ' + scriptName;
