@@ -219,7 +219,7 @@ function buildMail_(event, data, p) {
       intro = '你的場次有更新：';
   }
 
-  const lines = [(p && p.name ? p.name : '你') + ' 你好：', '', intro, '', sessionLines_(data, p).join('\n')];
+  const lines = [(p && (p.nickname || p.name) ? (p.nickname || p.name) : '你') + ' 你好：', '', intro, '', sessionLines_(data, p).join('\n')];
   if (after.length) lines.push('', after.join('\n'));
   if (event !== 'booking_rejected' && event !== 'booking_cancelled' && event !== 'group_failed' && event !== 'application_rejected') {
     lines.push('', '如需修改或取消，' + contactLine_() + '。');

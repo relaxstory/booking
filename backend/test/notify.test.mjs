@@ -42,7 +42,7 @@ test('前台登記：通關碼直接成立才寄「預約成立」，待確認�
   assert.equal(rest.length, 0);
   assert.equal(m.to, 'ming@mail.com');
   assert.equal(m.subject, '【Re:LAX Story Lab】預約成立：2026/11/20（五） 14:00 範例劇本・六人本');
-  assert.match(m.body, /^王小明 你好：/);
+  assert.match(m.body, /^暱稱1 你好：/); // 姓名欄已移除，信件以暱稱稱呼
   assert.match(m.body, /時間：2026\/11\/20（五） 14:00–18:00/);
   assert.match(m.body, /劇本：範例劇本・六人本（6 人・4 小時）/);
   assert.match(m.body, /你這組：6 人（男 3・女 3）/);
