@@ -173,3 +173,43 @@ function purgeTestData() {
     Logger.log('已刪除 ' + Object.keys(testSessions).length + ' 個測試場次');
   });
 }
+
+/**
+ * 官網劇本目錄欄位的初始資料（2026-11-20 從官網搬入試算表）。
+ * 之後以試算表為準，官網會從 GET ?action=catalog 讀取。
+ */
+const SITE_CATALOG_ = [
+  { id: 'chutao-lianticun', site_status: '上架中', featured: 'TRUE', sort_order: '1', badge: '新上架', tagline: '沒想到在推理本有戀陪吧', genres: '推理/還原/戀陪', gender_advice: '1女1男', series: '', adapted: 'TRUE', hosts: 'kaike' },
+  { id: 'tongliu-hewu', site_status: '上架中', featured: 'FALSE', sort_order: '2', badge: '新上架', tagline: '玩完之後有東西回不去了', genres: '還原/歡樂/吃瓜', gender_advice: '不限', series: '牛鬼蛇神系列', adapted: 'TRUE', hosts: 'kaike' },
+  { id: 'yaomo-guiguai', site_status: '上架中', featured: 'FALSE', sort_order: '3', badge: '新上架', tagline: '丹丹好吃', genres: '還原/歡樂/吃瓜', gender_advice: '不限', series: '牛鬼蛇神系列', adapted: 'TRUE', hosts: 'kaike' },
+  { id: 'zuolao-chaonengzhe', site_status: '上架中', featured: 'FALSE', sort_order: '4', badge: '', tagline: '超能力當然是用來殺人呀', genres: '推理/歡樂/中二', gender_advice: '不限', series: '超能宇宙系列', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'diesu', site_status: '上架中', featured: 'TRUE', sort_order: '5', badge: '', tagline: '交錯的人生，但只愛你一人', genres: '推理/還原/沉浸', gender_advice: '3女2男', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'half-world-deduction', site_status: '上架中', featured: 'TRUE', sort_order: '6', badge: '熱門', tagline: '有瓜吃瓜，邊推邊吃', genres: '推理/建築/城限', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+];
+
+/**
+ * 把官網的劇本資料填入試算表的官網欄位（可重複執行）。
+ * 只填「空白」的儲存格，已經在試算表改過的內容不會被覆蓋。
+ * 執行前請先執行 setup() 補齊欄位。
+ */
+function importSiteCatalog() {
+  withLock_(function () {
+    const existing = indexBy_(readAll_('scripts'), 'id');
+    let filled = 0;
+    const missing = [];
+    SITE_CATALOG_.forEach(function (c) {
+      const row = existing[c.id];
+      if (!row) { missing.push(c.id); return; }
+      let changed = false;
+      Object.keys(c).forEach(function (k) {
+        if (k === 'id') return;
+        if (String(row[k] === undefined || row[k] === null ? '' : row[k]).trim() === '' && c[k] !== '') {
+          row[k] = c[k];
+          changed = true;
+        }
+      });
+      if (changed) { update_('scripts', row); filled++; }
+    });
+    Logger.log('已填入 ' + filled + ' 個劇本的官網欄位' + (missing.length ? '；試算表找不到：' + missing.join(', ') + '（請先執行 importOfficialScripts）' : ''));
+  });
+}

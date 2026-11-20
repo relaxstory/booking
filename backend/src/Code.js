@@ -1,7 +1,7 @@
 /**
  * Re:LAX Story Lab schedule — Apps Script 後端進入點。
  *
- * GET  ?action=ping | scripts | schedule&from=yyyy-MM-dd&to=yyyy-MM-dd
+ * GET  ?action=ping | scripts | catalog | schedule&from=yyyy-MM-dd&to=yyyy-MM-dd
  * POST （Content-Type: text/plain，內容為 JSON，避免 CORS preflight）
  *      { action: 'book', ... } | { action: 'join', ... }
  *      { action: 'admin_*', token, ... } 後台操作（見 Admin.js）
@@ -32,6 +32,8 @@ function routeGet_(p) {
       return { ok: true, time: nowStr_() };
     case 'scripts':
       return handleScripts_();
+    case 'catalog':
+      return handleCatalog_();
     case 'schedule':
       return handleSchedule_(p);
     default:

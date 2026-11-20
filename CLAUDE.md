@@ -28,9 +28,16 @@ Re:LAX Story Lab 劇本殺場次預約網站。規格見 `docs/spec.md`，開發
 |---|---|---|
 | `frontend/`（前台、後台畫面、樣式） | 雲端或本機皆可 | push 到 `main` → GitHub Actions 自動部署 |
 | `backend/`（Apps Script） | **只能在店主的電腦**（需 `clasp` 的 Google 授權） | `npx clasp push --force` → `npx clasp update-deployment <部署 ID>`（ID 見 `docs/plan.md`） |
-| 編輯器函式（`setup`、`importOfficialScripts`、`removeSampleScripts`、`clearAllBookings`、`purgeTestData`、`createPasscode`） | Apps Script 編輯器（需登入店主 Google 帳號） | — |
+| 編輯器函式（`setup`、`importOfficialScripts`、`importSiteCatalog`、`removeSampleScripts`、`clearAllBookings`、`purgeTestData`、`createPasscode`） | Apps Script 編輯器（需登入店主 Google 帳號） | — |
 
 雲端工作階段若被要求改 `backend/`：可以改程式並跑本機測試，但要明確告知「需要在電腦上 `clasp push` 才會生效」，不要假裝已部署。
+
+## 劇本目錄（官網的資料來源）
+
+- **Sheet `scripts` 是劇本的唯一主資料**：前 8 欄供預約使用；右側欄位（`site_status`、`featured`、`sort_order`、`badge`、`tagline`、`genres`、`gender_advice`、`series`、`adapted`、`difficulty`、`hosts`、`description`）供官網使用，說明在 `backend/src/Scripts.js` 的 catalog 區段。
+- 公開 API：`GET ?action=catalog`，官網在 GitHub Actions 建置時讀取。只能回傳公開欄位。
+- 試算表選單「Re:LAX → 🔄 更新官網」（`backend/src/Site.js`）觸發官網重新部署；需要指令碼屬性 `GITHUB_TOKEN`（fine-grained，只限 `relaxstory/relaxstory.github.io`、Actions: Read and write）。權杖絕不寫進程式碼。
+- Apps Script 所有檔案共用全域範圍：新增函式／常數前確認名稱沒被用過（`backend/test/globals.test.mjs` 會檢查）。
 
 ## 協作規則
 
