@@ -60,6 +60,7 @@ function handleScripts_() {
  *   experience    經驗需求（例：新手可）
  *   reading_load  閱讀量（例：6000字／共同資訊多）
  *   curator_note  館長筆記（推薦詞，儲存格內換行即分段）
+ *   crossplay     TRUE = 可反串（官網顯示「可反串」標記；空白／FALSE 不顯示）
  * 角色配置由 male／female 推算（兩者皆空白 = 不限）。
  */
 
@@ -116,6 +117,7 @@ function catalogScript_(r) {
     experience: cellText_(r.experience),
     reading_load: cellText_(r.reading_load),
     curator_note: cellText_(r.curator_note),
+    crossplay: bool_(r.crossplay),
   };
 }
 

@@ -185,7 +185,7 @@ const SITE_CATALOG_ = [
   { id: 'zuolao-chaonengzhe', site_status: '上架中', featured: 'FALSE', sort_order: '4', badge: '', tagline: '超能力當然是用來殺人呀', genres: '推理/歡樂/中二', gender_advice: '不限', series: '超能宇宙系列', adapted: 'FALSE', hosts: 'kaike' },
   {
     id: 'diesu', site_status: '上架中', featured: 'TRUE', sort_order: '5', badge: '', tagline: '交錯的人生，但只愛你一人', genres: '推理/還原/沉浸', gender_advice: '3女2男', series: '', adapted: 'FALSE', hosts: 'kaike',
-    author: '小游《請將我深埋》', features: '強設定推理/平行時空', suits: '喜歡設定推理/還原時間線', experience: '新手可', reading_load: '6000字／共同資訊多',
+    crossplay: 'TRUE', author: '小游《請將我深埋》', features: '強設定推理/平行時空', suits: '喜歡設定推理/還原時間線', experience: '新手可', reading_load: '6000字／共同資訊多',
     description: [
       '如何殺死一個死亡回溯者？',
       '死後可以復活，還能在平行時空裡穿梭，「不是我喜歡的世界，那創造下一個。」',

@@ -31,7 +31,7 @@ const SHEETS = {
   scripts: ['id', 'name', 'players', 'duration_min', 'male', 'female', 'price', 'active',
     'site_status', 'featured', 'sort_order', 'badge', 'tagline', 'genres', 'gender_advice', 'series',
     'adapted', 'difficulty', 'hosts', 'description',
-    'author', 'features', 'suits', 'experience', 'reading_load', 'curator_note'],
+    'author', 'features', 'suits', 'experience', 'reading_load', 'curator_note', 'crossplay'],
   sessions: ['id', 'type', 'script_id', 'start_at', 'end_at', 'status', 'passcode', 'created_at', 'updated_at', 'admin_note', 'reminded_at'],
   participants: ['id', 'session_id', 'status', 'is_host', 'name', 'nickname', 'phone', 'email', 'line_id', 'ig', 'count', 'male', 'female', 'note', 'created_at', 'updated_at', 'purged_at'],
   closures: ['id', 'start_at', 'end_at', 'note', 'created_at'],

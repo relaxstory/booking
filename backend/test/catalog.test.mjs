@@ -16,7 +16,7 @@ const edit = (id, fields) =>
 
 test('setup 會補上官網目錄欄位', () => {
   const header = gas.rows('scripts')[0];
-  for (const k of ['site_status', 'featured', 'sort_order', 'badge', 'tagline', 'genres', 'gender_advice', 'series', 'adapted', 'difficulty', 'hosts', 'description', 'author', 'features', 'suits', 'experience', 'reading_load', 'curator_note']) {
+  for (const k of ['site_status', 'featured', 'sort_order', 'badge', 'tagline', 'genres', 'gender_advice', 'series', 'adapted', 'difficulty', 'hosts', 'description', 'author', 'features', 'suits', 'experience', 'reading_load', 'curator_note', 'crossplay']) {
     assert.ok(k in header, k);
   }
 });
@@ -84,11 +84,12 @@ test('catalog：簡介、館長筆記、適性資訊（蝶溯）', () => {
   assert.equal(d.experience, '新手可');
   assert.equal(d.reading_load, '6000字／共同資訊多');
   assert.match(d.curator_note, /命運的交錯感/);
+  assert.equal(d.crossplay, true);
   const paras = d.description.split('\n\n');
   assert.equal(paras.length, 6);
   assert.equal(paras[0], '如何殺死一個死亡回溯者？');
   assert.equal(paras[3].split('\n').length, 3);
   // 其他劇本沒有這些資料時為空值
   const c = catalog().find((s) => s.id === 'tongliu-hewu');
-  assert.deepEqual([c.author, c.features, c.suits, c.curator_note], ['', [], [], '']);
+  assert.deepEqual([c.author, c.features, c.suits, c.curator_note, c.crossplay], ['', [], [], '', false]);
 });
