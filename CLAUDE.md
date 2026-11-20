@@ -37,6 +37,10 @@ Re:LAX Story Lab 劇本殺場次預約網站。規格見 `docs/spec.md`，開發
 - **Sheet `scripts` 是劇本的唯一主資料**：前 8 欄供預約使用；右側欄位（`site_status`、`featured`、`sort_order`、`badge`、`tagline`、`genres`、`gender_advice`、`series`、`adapted`、`difficulty`、`hosts`、`description`）供官網使用，說明在 `backend/src/Scripts.js` 的 catalog 區段。
 - 公開 API：`GET ?action=catalog`，官網在 GitHub Actions 建置時讀取。只能回傳公開欄位。
 - 試算表選單「Re:LAX → 🔄 更新官網」（`backend/src/Site.js`）觸發官網重新部署；需要指令碼屬性 `GITHUB_TOKEN`（fine-grained，只限 `relaxstory/relaxstory.github.io`、Actions: Read and write）。權杖絕不寫進程式碼。
+- 官網的備援檔 `src/data/catalog.snapshot.json`（在官網 repo）可用後端測試環境重新產生（例：修改 `SITE_CATALOG_` 或 catalog 欄位之後）：
+  ```bash
+  cd backend && node --input-type=module -e "import { createGas } from './test/gas-mock.mjs'; const g=createGas(new Date().toISOString()); g.run('setup()'); g.run('importOfficialScripts()'); g.run('importSiteCatalog()'); console.log(JSON.stringify(g.get({action:'catalog'}), null, 2))" > ../../relaxstory.github.io/src/data/catalog.snapshot.json
+  ```
 - Apps Script 所有檔案共用全域範圍：新增函式／常數前確認名稱沒被用過（`backend/test/globals.test.mjs` 會檢查）。
 
 ## 協作規則
