@@ -97,6 +97,20 @@ const OFFICIAL_SCRIPTS_ = [
   { id: 'zuolao-chaonengzhe', name: '坐牢の超能者殺人日常', players: 5, duration_min: 150, male: 5, female: 0 },
   { id: 'diesu', name: '蝶溯', players: 5, duration_min: 210, male: 2, female: 3 },
   { id: 'half-world-deduction', name: '1/2世界推理法則', players: 6, duration_min: 420, male: '', female: '' },
+  // 2026-11-21 從公開試算表「凱克私團」4／5／6 人劇本加入
+  { id: 'toudeng-wanjia', name: '頭等玩家．圍桌謀殺', players: 4, duration_min: 210, male: '', female: '' },
+  { id: 'taiwu', name: '胎屋', players: 4, duration_min: 150, male: '', female: '' },
+  { id: 'xiakehou', name: '下課後', players: 4, duration_min: 150, male: '', female: '' },
+  { id: 'jiaojiao-zhongxue', name: '佼佼中學冒險', players: 4, duration_min: 210, male: '', female: '' },
+  { id: 'weida-de-yisheng', name: '偉大的一生', players: 5, duration_min: 330, male: 3, female: 2 },
+  { id: 'wo-chaoneng-tuili', name: '我超能推理', players: 5, duration_min: 180, male: 4, female: 1 },
+  { id: 'chao-wunao-guiji', name: '超無腦詭計鑑賞', players: 6, duration_min: 270, male: '', female: '' },
+  { id: 'huiyi-mengyou-zhinan', name: '回憶夢遊指南', players: 6, duration_min: 270, male: 3, female: 3 },
+  { id: 'weiwen-geming', name: '未聞哥名', players: 6, duration_min: 240, male: 3, female: 3 },
+  { id: 'toto-migong', name: 'TOTO的迷宮冒險', players: 6, duration_min: 360, male: 3, female: 3 },
+  { id: 'baiwuyu-guaitan', name: '百物語：怪談事件簿', players: 6, duration_min: 360, male: '', female: '' },
+  { id: 'hutu-xiongshou', name: '糊塗兇手與聰明凶器', players: 6, duration_min: 360, male: 3, female: 3 },
+  { id: 'yeying-buceng-anmian', name: '夜鶯不曾安眠', players: 6, duration_min: 300, male: 3, female: 3 },
 ];
 
 /**
@@ -197,6 +211,20 @@ const SITE_CATALOG_ = [
     curator_note: '平行時空的設定雖然已經在許多故事中被使用了，但這種命運的交錯感依然讓人難忘呢……',
   },
   { id: 'half-world-deduction', site_status: '上架中', featured: 'TRUE', sort_order: '6', badge: '熱門', tagline: '有瓜吃瓜，邊推邊吃', genres: '推理/建築/城限', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  // 2026-11-21 從公開試算表「凱克私團」4／5／6 人劇本加入
+  { id: 'toudeng-wanjia', site_status: '上架中', featured: 'FALSE', sort_order: '7', badge: '新上架', tagline: '在劇本殺中玩劇本殺', genres: '推理/還原/搞笑', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'taiwu', site_status: '上架中', featured: 'FALSE', sort_order: '8', badge: '', tagline: '這是一棟有歷史的房子', genres: '推理/還原', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'xiakehou', site_status: '上架中', featured: 'FALSE', sort_order: '9', badge: '', tagline: '女高中生的愛恨', genres: '還原/現代/日式', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'jiaojiao-zhongxue', site_status: '上架中', featured: 'FALSE', sort_order: '10', badge: '', tagline: '在學校裡面走走走走走...', genres: '推理/還原/現代', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'weida-de-yisheng', site_status: '上架中', featured: 'FALSE', sort_order: '11', badge: '熱門', tagline: '又是美好的一天', genres: '情感/歡樂/沉浸', gender_advice: '2女2男', series: '', adapted: 'TRUE', hosts: 'kaike' },
+  { id: 'wo-chaoneng-tuili', site_status: '上架中', featured: 'FALSE', sort_order: '12', badge: '', tagline: '寫作當然要用劇本梗', genres: '推理/歡樂/中二', gender_advice: '不限', series: '超能宇宙系列', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'chao-wunao-guiji', site_status: '上架中', featured: 'FALSE', sort_order: '13', badge: '', tagline: '為甚麼要斬首？因為可以投籃呀！', genres: '推理/歡樂/中二', gender_advice: '不限', series: '超能宇宙系列', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'huiyi-mengyou-zhinan', site_status: '上架中', featured: 'FALSE', sort_order: '14', badge: '', tagline: '校園青春嗎?', genres: '情感/現代/校園', gender_advice: '3女3男', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'weiwen-geming', site_status: '上架中', featured: 'FALSE', sort_order: '15', badge: '新上架', tagline: '就該像動漫裡一樣中二！', genres: '歡樂/機制', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'toto-migong', site_status: '上架中', featured: 'FALSE', sort_order: '16', badge: '', tagline: '這不是殺人建築', genres: '推理/還原/建築', gender_advice: '1女1男', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'baiwuyu-guaitan', site_status: '上架中', featured: 'FALSE', sort_order: '17', badge: '', tagline: '怪談終會成真', genres: '推理/還原/日式', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'hutu-xiongshou', site_status: '上架中', featured: 'FALSE', sort_order: '18', badge: '', tagline: '不靠譜的小SB...小可愛們', genres: '推理/還原/歡樂', gender_advice: '不限', series: '', adapted: 'FALSE', hosts: 'kaike' },
+  { id: 'yeying-buceng-anmian', site_status: '上架中', featured: 'FALSE', sort_order: '19', badge: '', tagline: '有著暗黑癖好的家族故事', genres: '還原/暗黑/沉浸', gender_advice: '1男', series: '', adapted: 'TRUE', hosts: 'kaike' },
 ];
 
 /**

@@ -18,7 +18,14 @@ const book = (over = {}) => {
   });
 };
 
-const OFFICIAL = ['chutao-lianticun', 'tongliu-hewu', 'yaomo-guiguai', 'zuolao-chaonengzhe', 'diesu', 'half-world-deduction'];
+// 正式劇本 id 依 Setup.js 的 OFFICIAL_SCRIPTS_ 順序
+const OFFICIAL = JSON.parse(createGas('2026-11-18T10:00:00+08:00').run('JSON.stringify(OFFICIAL_SCRIPTS_.map(function (s) { return s.id; }))'));
+
+test('正式劇本：最早 6 本在前，之後是 2026-11-21 從凱克私團加入的 13 本', () => {
+  assert.deepEqual(OFFICIAL.slice(0, 6), ['chutao-lianticun', 'tongliu-hewu', 'yaomo-guiguai', 'zuolao-chaonengzhe', 'diesu', 'half-world-deduction']);
+  assert.equal(OFFICIAL.length, 19);
+  assert.equal(new Set(OFFICIAL).size, 19);
+});
 
 test('setup 不會建立任何劇本', () => {
   const g = createGas('2026-11-18T10:00:00+08:00');
@@ -40,7 +47,7 @@ test('importOfficialScripts：匯入 6 本正式劇本，可重複執行並保�
   gas.run(`(function(){ const r = readAll_('scripts').filter(function (x) { return x.id === 'diesu'; })[0]; r.price = '650'; r.active = 'FALSE'; update_('scripts', r); })()`);
   gas.run('importOfficialScripts()');
   const rows = gas.rows('scripts');
-  assert.equal(rows.length, 9);
+  assert.equal(rows.length, 3 + OFFICIAL.length);
   const d = rows.find((r) => r.id === 'diesu');
   assert.deepEqual([d.price, d.active, d.duration_min], ['650', 'FALSE', '210']);
 });
@@ -58,7 +65,7 @@ test('removeSampleScripts：刪除範例劇本及使用它們的場次與參與�
   assert.ok(!gas.rows('sessions').some((s) => s.id === a.session_id));
 
   gas.run('removeSampleScripts()'); // 可重複執行
-  assert.equal(gas.rows('scripts').length, 6);
+  assert.equal(gas.rows('scripts').length, OFFICIAL.length);
 });
 
 test('clearAllBookings：清空場次、參與者、關閉時段、通關碼，保留劇本與管理者', () => {

@@ -93,3 +93,16 @@ test('catalog：簡介、館長筆記、適性資訊（蝶溯）', () => {
   const c = catalog().find((s) => s.id === 'tongliu-hewu');
   assert.deepEqual([c.author, c.features, c.suits, c.curator_note], ['', [], [], '']);
 });
+
+test('catalog：2026-11-21 加入的劇本（夜鶯不曾安眠、頭等玩家）', () => {
+  gas.run('importSiteCatalog()');
+  const c = catalog();
+  const y = c.find((s) => s.id === 'yeying-buceng-anmian');
+  assert.deepEqual(
+    [y.name, y.players, y.duration_min, y.male, y.female, y.gender_advice, y.adapted, y.genres, y.tagline, y.hosts, y.bookable],
+    ['夜鶯不曾安眠', 6, 300, 3, 3, '1男', true, ['還原', '暗黑', '沉浸'], '有著暗黑癖好的家族故事', ['kaike'], true],
+  );
+  const t = c.find((s) => s.id === 'toudeng-wanjia');
+  assert.deepEqual([t.players, t.male, t.female, t.badge, t.sort_order], [4, null, null, '新上架', 7]);
+  assert.equal(c.filter((s) => !s.id.startsWith('s-sample-')).length, 19);
+});
